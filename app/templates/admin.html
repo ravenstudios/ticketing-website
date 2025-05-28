@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Technician Dashboard | CyberTex</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+  </head>
+
+  <body>
+    <!-- Spinner overlay: shows while loading data -->
+    <div id="spinner" role="status" aria-live="polite" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:999;background:rgba(255,255,255,0.6);justify-content:center;align-items:center;">
+      <div style="border:8px solid #eee;border-top:8px solid #ff9800;border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;"></div>
+    </div>
+    <!-- Header with logo, company name, dashboard title, and navigation links -->
+    <header>
+      <!-- Logo and company name, links to home page -->
+      <a href="/" class="brand-link" style="display:flex;align-items:center;justify-content:center;gap:12px;">
+        <img src="/static/images/cybertex-logo.png" alt="CyberTex Logo" style="height:48px;vertical-align:middle;">
+        <h1 style="display:inline;vertical-align:middle;">CyberTex</h1>
+      </a>
+      <!-- Dashboard subtitle -->
+      <div style="font-size:1.1em; color:#e0e0e0; margin-top:8px;">Technician Dashboard</div>
+      <!-- Navigation links: Closed Tickets and Knowledge Board -->
+      <div style="position:absolute; left:24px; top:32px; display:flex; flex-direction:column; gap:8px;">
+        <a href="closed" class="closed-link" style="position:static;">View Closed Tickets</a>
+        <a href="knowledge" class="closed-link" style="position:static;">Knowledge Board</a>
+      </div>
+    </header>
+    <!-- Main container for open tickets table -->
+    <div class="container">
+      <h2>Open Support Tickets</h2>
+      <!-- Feedback message area -->
+      <div id="message"></div>
+      <!-- Button to refresh tickets -->
+      <button onclick="location.reload()">Refresh Tickets</button>
+      <!-- Table where tickets will be displayed -->
+      <table id="ticketsTable">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Department</th>
+          <th>Problem</th>
+          <th>Status</th>
+          <th>Technician Notes</th>
+          <th>Technician</th>
+          <th>Submitted</th>
+          <th>Actions</th>
+        </tr>
+        
+        {% for t in tickets %}
+          <tr>
+            <td>{{t.name}}</td>
+            <td>{{t.department}}</td>
+            <td>{{t.problem}}</td>
+            <td><button onclick="window.location.href='/'">View Tickets</button></td>
+
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <!-- Modal for adding a note to a ticket -->
+    <!-- <div id="noteModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000;background:rgba(0,0,0,0.4);justify-content:center;align-items:center;">
+      <div style="background:#fff;padding:24px;border-radius:8px;min-width:300px;">
+        <h3>Add Note</h3>
+        <textarea id="modalNote" rows="4" style="width:100%;"></textarea>
+        <div style="margin-top:12px;text-align:right;">
+          <button onclick="closeNoteModal()">Cancel</button>
+          <button onclick="submitNoteModal()">Add</button>
+        </div>
+      </div>
+    </div> -->
+
+  </body>
+</html>

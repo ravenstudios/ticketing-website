@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cybertex Support Ticket Submission</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <!-- Spinner overlay (add at the top of <body>) -->
+  <div id="spinner" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:999;background:rgba(255,255,255,0.6);justify-content:center;align-items:center;">
+    <div style="border:8px solid #eee;border-top:8px solid #ff9800;border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;"></div>
+  </div>
+
+  <!-- Header section with logo and company name -->
+  <header>
+    <!-- Logo image, positioned absolutely in the header -->
+    <img src="/static/images/cybertex-logo.png" alt="CyberTex Logo" class="header-img">
+    <!-- Company name, links to home page -->
+    <a href="/" class="brand-link"><h1>CyberTex</h1></a>
+    <!-- Subtitle for the support system -->
+    <div style="font-size:1.1em; color:#e0e0e0; margin-top:8px;">Support Ticket System</div>
+    <!-- Link to admin sign in page -->
+    <a href="admin" class="admin-link">Admin Sign In</a>
+  </header>
+  <!-- Main form container for submitting tickets -->
+  <div class="container">
+    <h2>Submit a Support Ticket</h2>
+    <form action="/submit" method="POST" id="ticketForm">
+      <!-- Name input -->
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <!-- Department input -->
+      <label for="department">Department:</label>
+      <input type="text" id="department" name="department" required>
+      <!-- Problem description input -->
+      <label for="problem">Problem Description:</label>
+      <textarea id="problem" name="problem" required rows="4"></textarea>
+      <!-- Photo upload input (optional) -->
+      <label for="photo">Attach a Photo (optional):</label>
+      <input type="file" id="photo" name="photo" accept="image/*">
+      <!-- Submit button -->
+      <button type="submit">Submit Ticket</button>
+    </form>
+  </div>
+
+</body>
+</html>

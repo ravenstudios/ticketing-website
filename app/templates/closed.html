@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Closed Tickets | CyberTex</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <!-- Spinner overlay for loading indication -->
+  <div id="spinner" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:999;background:rgba(255,255,255,0.6);justify-content:center;align-items:center;">
+    <div style="border:8px solid #eee;border-top:8px solid #ff9800;border-radius:50%;width:60px;height:60px;animation:spin 1s linear infinite;"></div>
+  </div>
+  <!-- Header with logo, company name, page title, and back link -->
+  <header>
+    <!-- Logo and company name, links to home page -->
+    <a href="/" class="brand-link" style="display:flex;align-items:center;justify-content:center;gap:12px;">
+      <img src="/static/images/cybertex-logo.png" alt="CyberTex Logo" style="height:48px;vertical-align:middle;">
+      <h1 style="display:inline;vertical-align:middle;">CyberTex</h1>
+    </a>
+    <!-- Page subtitle -->
+    <div style="font-size:1.1em; color:#e0e0e0; margin-top:8px;">Closed Tickets</div>
+    <!-- Back link to admin page -->
+    <a href="/admin" class="back-link">← Back to Admin</a>
+  </header>
+  <!-- Main container for closed tickets table -->
+  <div class="container">
+    <h2>Closed Support Tickets</h2>
+    <!-- Button to refresh tickets -->
+    <button onclick="loadTickets()">Refresh</button>
+    <!-- Table where closed tickets will be displayed -->
+    <table id="ticketsTable"></table>
+  </div>
+
+</body>
+</html>

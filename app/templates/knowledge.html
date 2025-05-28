@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Knowledge Board | CyberTex</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    /* Main background and font */
+    body { background: #f4f8fb; font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; }
+    /* Header bar styling */
+    header { background: #1a2238; color: #e0e0e0; padding: 24px 0 16px 0; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: relative; min-height: 90px; }
+    /* CyberTex title styling */
+    header h1 { margin: 0; font-size: 2.2em; letter-spacing: 2px; color: #ff9800; }
+    /* Main container styling */
+    .container { max-width: 800px; margin: 40px auto; background: #fff; border-radius: 10px; box-shadow: 0 4px 24px rgba(26,34,56,0.08); padding: 32px 28px 24px 28px; }
+    /* Individual note styling */
+    .note { background: #f8fafc; border-radius: 6px; padding: 12px; margin-bottom: 16px; border-left: 4px solid #ff9800; }
+    .note-title { font-weight: bold; color: #1a2238; }
+    .note-body { margin-top: 6px; color: #333; }
+    .note-meta { font-size: 0.9em; color: #888; margin-top: 4px; }
+    /* Add note form styling */
+    .add-note-form { margin-bottom: 24px; }
+    .add-note-form input, .add-note-form textarea { width: 100%; margin-bottom: 8px; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+    .add-note-form button { background: #1a2238; color: #ff9800; border: none; padding: 10px 22px; border-radius: 5px; font-size: 1em; font-weight: 600; cursor: pointer; }
+    .add-note-form button:hover { background: #11182b; }
+    /* Spinner animation */
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    /* Spinner overlay styling */
+    #spinner { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:999; background:rgba(255,255,255,0.6); justify-content:center; align-items:center; }
+    #spinner div { border:8px solid #eee; border-top:8px solid #ff9800; border-radius:50%; width:60px; height:60px; animation:spin 1s linear infinite; }
+    #message {
+      text-align: center;
+      margin-bottom: 16px;
+      font-weight: bold;
+      min-height: 1.5em;
+    }
+    .note-title strong, .note-body strong, .note-meta strong { color: #ff9800; margin-right: 4px; }
+    .closed-link { position:absolute;left:24px;top:32px;color:#ff9800;text-decoration:none;font-weight:bold;font-size:1.1em; }
+    .brand-link { text-decoration: none; }
+    .brand-link h1 { color: #ff9800; transition: color 0.2s; }
+    .brand-link:hover h1 { color: #ffa733; }
+    @media (max-width: 900px) {
+      .container { padding: 12px 4px; }
+      header h1 { font-size: 1.3em; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Spinner overlay, now accessible -->
+  <div id="spinner" role="status" aria-live="polite">
+    <div></div>
+  </div>
+
+  <!-- Header with logo, company name, page title, and back link -->
+  <header>
+    <!-- Logo and company name, links to home page -->
+    <a href="index" class="brand-link" style="display:flex;align-items:center;justify-content:center;gap:12px;">
+      <img src="/static/images/cybertex-logo.png" alt="CyberTex Logo" style="height:48px;vertical-align:middle;">
+      <h1 style="display:inline;vertical-align:middle;">CyberTex</h1>
+    </a>
+    <!-- Page subtitle -->
+    <div style="font-size:1.1em; color:#e0e0e0; margin-top:8px;">Knowledge Board</div>
+    <!-- Back link to admin page -->
+    <a href="admin" class="closed-link">← Back to Admin</a>
+  </header>
+  <!-- Main container for the knowledge board -->
+  <div class="container">
+    <h2>Add a Knowledge Note</h2>
+    <!-- Feedback message area -->
+    <div id="message"></div>
+    <!-- Form for adding a new knowledge note -->
+    <form class="add-note-form" id="addNoteForm" enctype="multipart/form-data">
+      <input type="text" id="noteTitle" name="title" placeholder="Problem Title" required />
+      <textarea id="noteBody" name="body" placeholder="Describe the solution..." required></textarea>
+      <input type="text" id="noteAuthor" name="author" placeholder="Your name" required />
+      <input type="file" id="noteFile" name="file" />
+      <button type="submit">Add Note</button>
+    </form>
+    <!-- Search box for filtering notes -->
+    <input type="text" id="searchBox" placeholder="Search notes..." style="width:100%;margin-bottom:18px;padding:8px;border-radius:4px;border:1px solid #ccc;">
+    <h2>Knowledge Notes</h2>
+    <div id="notesList"></div>
+  </div>
+  <script>
+    function showSpinner() {
+      document.getElementById('spinner').style.display = 'flex';
+    }
+    function hideSpinner() {
+      document.getElementById('spinner').style.display = 'none';
+    }
+    function showMessage(msg, color) {
+      const msgDiv = document.getElementById('message');
+      msgDiv.textContent = msg;
+      msgDiv.style.color = color;
+      setTimeout(() => { msgDiv.textContent = ''; }, 3000);
+    }
+
+    // Fetch and display all knowledge notes from the backend
+    async function loadNotes(query = '') {
+      showSpinner();
+      try {
+        let url = '/api/knowledge';
+        if (query) url += '?q=' + encodeURIComponent(query);
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Network response was not ok');
+        const notes = await res.json();
+        const notesList = document.getElementById('notesList');
+        if (!Array.isArray(notes) || notes.length === 0) {
+          notesList.innerHTML = '<div style="text-align:center;color:#888;">No knowledge notes yet.</div>';
+        } else {
+          notesList.innerHTML = notes.map(n => `
+            <div class="note" data-id="${n.id}">
+              <div class="note-title"><strong>Problem:</strong> ${n.title}</div>
+              <div class="note-body"><strong>Solution:</strong> ${n.body}</div>
+              <div class="note-meta"><strong>Name:</strong> ${n.author} &mdash; ${n.createdAt ? new Date(n.createdAt).toLocaleString() : ''}</div>
+              ${n.fileUrl ? (
+                n.fileUrl.match(/\.(jpg|jpeg|png|gif)$/i)
+                  ? `<img src="${n.fileUrl}" alt="Attachment" style="max-width:200px;display:block;margin-top:8px;">`
+                  : `<a href="${n.fileUrl}" target="_blank" style="display:block;margin-top:8px;">Download Attachment</a>`
+              ) : ''}
+              <button onclick="deleteNote(${n.id})" style="background:#e53935;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;margin-right:8px;">Delete</button>
+              <button onclick="showEditNote(${n.id}, '${encodeURIComponent(n.title)}', '${encodeURIComponent(n.body)}', '${encodeURIComponent(n.author)}')" style="background:#007bff;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Edit</button>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        showMessage('Error loading notes.', 'red');
+      } finally {
+        hideSpinner();
+      }
+    }
+
+    // Delete a note
+    async function deleteNote(id) {
+      if (!confirm('Delete this note?')) return;
+      showSpinner();
+      const res = await fetch('/api/knowledge/' + id, { method: 'DELETE' });
+      hideSpinner();
+      if (res.ok) {
+        showMessage('Note deleted.', 'green');
+        loadNotes(document.getElementById('searchBox').value);
+      } else {
+        showMessage('Error deleting note.', 'red');
+      }
+    }
+
+    // Show edit form for a note
+    function showEditNote(id, title, body, author) {
+      title = decodeURIComponent(title);
+      body = decodeURIComponent(body);
+      author = decodeURIComponent(author);
+      const notesList = document.getElementById('notesList');
+      const noteDiv = notesList.querySelector(`.note[data-id="${id}"]`);
+      noteDiv.innerHTML = `
+        <input type="text" id="editTitle" value="${title}" style="width:100%;margin-bottom:6px;">
+        <textarea id="editBody" rows="3" style="width:100%;margin-bottom:6px;">${body}</textarea>
+        <input type="text" id="editAuthor" value="${author}" style="width:100%;margin-bottom:6px;">
+        <button onclick="submitEditNote(${id})" style="background:#007bff;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;margin-right:8px;">Save</button>
+        <button onclick="loadNotes(document.getElementById('searchBox').value)" style="background:#aaa;color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Cancel</button>
+      `;
+    }
+
+    // Submit edit for a note
+    async function submitEditNote(id) {
+      showSpinner();
+      const title = document.getElementById('editTitle').value;
+      const body = document.getElementById('editBody').value;
+      const author = document.getElementById('editAuthor').value;
+      const res = await fetch('/api/knowledge/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, body, author })
+      });
+      hideSpinner();
+      if (res.ok) {
+        showMessage('Note updated.', 'green');
+        loadNotes(document.getElementById('searchBox').value);
+      } else {
+        showMessage('Error updating note.', 'red');
+      }
+    }
+
+    // Search notes as you type
+    document.getElementById('searchBox').addEventListener('input', function() {
+      loadNotes(this.value);
+    });
+
+    // Handle new note submission from the form
+    document.getElementById('addNoteForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      showSpinner();
+      const form = document.getElementById('addNoteForm');
+      const formData = new FormData(form);
+      const res = await fetch('/api/knowledge', {
+        method: 'POST',
+        body: formData
+      });
+      hideSpinner();
+      if (res.ok) {
+        showMessage('Note added.', 'green');
+        form.reset();
+        loadNotes();
+      } else {
+        showMessage('Error adding note.', 'red');
+      }
+    });
+
+    // Load notes on page load
+    loadNotes();
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+/* Main page background and font */
+body {
+  background: #f4f8fb;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+/* Header bar styling */
+header {
+  position: relative; /* Needed for absolute positioning of logo */
+  background: #1a2238;
+  color: #e0e0e0;
+  padding: 24px 0 16px 0;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  min-height: 90px; /* ensures enough space for the bigger logo */
+}
+/* CyberTex title styling */
+header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  letter-spacing: 2px;
+  color: #ff9800; /* orange */
+}
+/* Main form container styling */
+.container {
+  max-width: 420px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgba(26,34,56,0.08);
+  padding: 32px 28px 24px 28px;
+}
+/* Form heading styling */
+h2 {
+  text-align: center;
+  color: #1a2238;
+  margin-bottom: 28px;
+  font-weight: 400;
+}
+/* Label styling for form fields */
+label {
+  font-weight: 500;
+  color: #1a2238;
+}
+/* Input and textarea styling */
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 18px;
+  border: 1px solid #bfc9d9;
+  border-radius: 5px;
+  font-size: 1em;
+  background: #f8fafc;
+  transition: border 0.2s;
+}
+/* Focus effect for inputs */
+input:focus, textarea:focus {
+  border: 1.5px solid #1a2238;
+  outline: none;
+  background: #fff;
+}
+/* Submit button styling */
+button {
+  width: 100%;
+  background: #1a2238;
+  color: #ff9800; /* orange */
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+/* Button hover effect */
+button:hover {
+  background: #11182b;
+}
+/* Logo image styling and positioning */
+.header-img {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  width: 72px;      /* bigger size */
+  height: 72px;     /* bigger size */
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  object-fit: cover;
+}
+/* Admin link styling */
+.admin-link {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  color: #ff9800;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.admin-link:hover {
+  color: #ffa733;
+  text-decoration: underline;
+}
+/* Brand link styling */
+.brand-link {
+  text-decoration: none;
+}
+.brand-link h1 {
+  color: #ff9800;
+  transition: color 0.2s;
+}
+.brand-link:hover h1 {
+  color: #ffa733;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+
+
+.closed-link {
+  position: absolute;
+  left: 24px;
+  top: 32px;
+  color: #ff9800;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1em;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
