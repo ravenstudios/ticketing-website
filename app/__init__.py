@@ -9,9 +9,7 @@ def create_app():
     app.config['DEBUG'] = True
     db.init_app(app)
 
-    from .routes import main, knowledge, admin, closed
+    from .routes import main
     app.register_blueprint(main)
 
     return app
-
-    

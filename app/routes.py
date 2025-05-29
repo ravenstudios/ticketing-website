@@ -56,4 +56,17 @@ def submit():
     db.session.add(ticket)
     db.session.commit()
 
-    return f"Ticket submitted! ID: {ticket.id}"
+    return render_template('index.html', ticket=ticket)
+
+
+@main.route('/delete')
+def delete_ticket():
+    tickets = Ticket.query.all()
+    ticket_id = request.args.get('id')
+    ticket = Ticket.query.get(ticket_id)
+
+    if ticket:
+        db.session.delete(ticket)
+        db.session.commit()
+
+    return render_template('admin.html', tickets=tickets)

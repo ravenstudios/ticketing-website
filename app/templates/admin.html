@@ -47,13 +47,13 @@
           <th>Submitted</th>
           <th>Actions</th>
         </tr>
-        
+
         {% for t in tickets %}
           <tr>
             <td>{{t.name}}</td>
             <td>{{t.department}}</td>
             <td>{{t.problem}}</td>
-            <td><button onclick="window.location.href='/'">View Tickets</button></td>
+            <td><button onclick="window.location.href='/delete?id={{t.id}}'">Delete</button></td>
 
           </tr>
         {% endfor %}

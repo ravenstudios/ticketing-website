@@ -43,6 +43,11 @@
       <button type="submit">Submit Ticket</button>
     </form>
   </div>
-
+  {% if ticket %}
+    <h1>{{ticket}}</h1>
+    <script type="text/javascript">
+       alert("{{ticket}}");
+    </script>
+  {% endif %}
 </body>
 </html>
